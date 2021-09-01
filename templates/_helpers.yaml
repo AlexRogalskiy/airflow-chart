@@ -109,6 +109,39 @@ env:
 {{ .Release.Name }}-flower.{{ .Values.ingress.baseDomain }}
 {{- end }}
 
+
+{{- define "logging_sidecar_environment" }}
+  - name: LOGGING_MODE
+    value: fluentd
+  - name: OUTPUT_BUFFER_CHUNK_LIMIT
+    value: "2M"
+  - name: OUTPUT_BUFFER_QUEUE_LIMIT
+    value: "8"
+  - name: OUTPUT_HOST
+    value: {{ .Values.elasticsearchOutputHost | quote }}
+  - name: OUTPUT_PORT
+    value: {{ .Values.elasticsearchOutputPort | quote }}
+  - name: RELEASE
+    value: {{ .Release.Name | quote}}
+  - name: PLATFORM
+    value: {{ .Values.platform.release | quote }}
+  - name: WORKSPACE
+    value: {{ .Values.platform.workspace | quote }}
+{{- end }}
+{{- define "logging_sidecar_volumes" }}
+  - name: fluent-conf
+    configMap:
+        name: {{ .Release.Name }}-fluentd-sidecar-conf
+{{- end }}
+{{- define "logging_sidecar_volume_mounts" }}
+  - name: fluent-conf
+    mountPath: /etc/fluent/config.d
+{{- end }}
+{{ define "logging_sidecar_image" -}}
+{{ printf "%s:%s" .Values.images.loggingSidecar.repository .Values.images.loggingSidecar.tag }}
+{{- end }}
+
+
 # This helper will change when customers deploy a new image.
 {{ define "airflow_image" -}}
 {{ printf "%s:%s" .Values.images.airflow.repository (default .Values.defaultAirflowTag .Values.images.airflow.tag) }}

@@ -138,6 +138,23 @@ spec:
             - name: logs
               mountPath: {{ template "airflow_logs" . }}
 {{- end }}
+{{- if .Values.loggingSidecar.enabled }}
+        - name: ap-logging-sidecar
+          image: {{ template "logging_sidecar_image" . }}
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 384Mi
+          env:
+            - name: COMPONENT
+              value: worker
+          {{- include "logging_sidecar_environment" . | indent 10 }}
+          volumeMounts:
+          {{- include "logging_sidecar_volume_mounts" . | indent 10 }}
+{{- end }}
 {{- if .Values.workers.extraContainers }}
 {{- toYaml .Values.workers.extraContainers | nindent 8 }}
 {{- end }}
@@ -150,6 +167,7 @@ spec:
         - name: config
           configMap:
             name: {{ template "airflow_config" . }}
+{{- include "logging_sidecar_volumes" . | indent 6 }}
 {{- if .Values.workers.extraVolumes }}
 {{ toYaml .Values.workers.extraVolumes | indent 8 }}
 {{- end }}

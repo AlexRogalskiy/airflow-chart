@@ -104,6 +104,10 @@ images:
     repository: quay.io/astronomer/ap-pgbouncer-exporter
     tag: 0.11.0-1
     pullPolicy: IfNotPresent
+  loggingSidecar:
+    repository: quay.io/astronomer/ap-logging-sidecar
+    tag: TODO
+    pullPolicy: IfNotPresent
 
 # Environment variables for all airflow containers
 # other than init containers.
@@ -160,6 +164,10 @@ authSidecar:
   tag: stable
   pullPolicy: IfNotPresent
   port: 8084
+
+# Enable logging sidecar
+loggingSidecar:
+  enabled: false
 
 
 # Airflow Worker Config
