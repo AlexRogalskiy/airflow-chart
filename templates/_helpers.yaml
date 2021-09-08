@@ -110,6 +110,13 @@ env:
 {{- end }}
 
 
+# passed to all containers
+{{- define "logging_environment" }}
+  - name: SIDECAR_LOGGING_HOST
+    value: "127.0.0.1"
+  - name: SIDECAR_LOGGING_PORT
+    value: "5170"
+{{- end }}
 {{- define "logging_sidecar_environment" }}
   - name: LOGGING_MODE
     value: fluentd
