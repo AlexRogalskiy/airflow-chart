@@ -1,5 +1,9 @@
 dependencies:
-  - name: postgresql
-    version: 6.3.12
-    repository: "@stable"
-    condition: postgresql.enabled
+  # TODO this chart doesnt exist locally so it cant install when using local charts
+  # unless I manually cache it.
+  # not sure why its trying to install this when installing astronomer platform anyway
+  # I need to come up with a better fix here
+  #- name: postgresql
+  #  version: 6.3.12
+  #  repository: "@stable"
+  #  condition: postgresql.enabled
