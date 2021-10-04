@@ -114,10 +114,16 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
           {{- include "airflow_environment_variables" . | indent 10 }}
+{{- if .Values.flower.extraContainers }}
+{{- toYaml .Values.flower.extraContainers | nindent 8 }}
+{{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ template "airflow_config" . }}
+{{- if .Values.flower.extraVolumes }}
+{{ toYaml .Values.flower.extraVolumes | indent 8 }}
+{{- end }}
         {{- if .Values.authSidecar.enabled }}
         - name: nginx-sidecar-conf
           configMap:
